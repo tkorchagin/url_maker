@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔗 UTM Parameter Updater</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif; /* Use a non-serif font stack */
+        }
+
+        /* Add a beautiful border to input text */
+        input[type="text"] {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 5px;
+        }
+
+        /* Style for the copy button */
+        button.copy-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth hover effect */
+        }
+
+        /* Style for the copy button on hover */
+        button.copy-button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>🔗 UTM Parameter Updater</h1> 
+
+<h2>Enter UTM Parameters:</h2>
+
+<label>UTM Source: <input type="text" id="utm_source" value=""></label><br>
+<label>UTM Medium: <input type="text" id="utm_medium" value=""></label><br>
+<label>UTM Term: <input type="text" id="utm_term" value=""></label><br>
+<label>UTM Campaign: <input type="text" id="utm_campaign" value=""></label><br>
+<label>App ID (iOS): <input type="text" id="app_id_ios" value=""></label><br>
+<label>App ID (Android): <input type="text" id="app_id_android" value=""></label><br>
+
+<h2>Generated URLs</h2>
+
+<p>iOS: <a href="#" target="_blank" id="ios_url"></a> <button onclick="copyToClipboard('ios_url')">Copy 💙</button></p>
+<p>Android: <a href="#" target="_blank" id="android_url"></a> <button onclick="copyToClipboard('android_url')">Copy 💙</button></p>
+
+<script>
+    // Load saved params from local storage
+    window.onload = function() {
+        let savedParams = JSON.parse(localStorage.getItem('utmParams'));
+        if (savedParams) {
+            document.getElementById('utm_source').value = savedParams.utm_source || '';
+            document.getElementById('utm_medium').value = savedParams.utm_medium || '';
+            document.getElementById('utm_term').value = savedParams.utm_term || '';
+            document.getElementById('utm_campaign').value = savedParams.utm_campaign || '';
+            document.getElementById('app_id_ios').value = savedParams.app_id_ios || '';
+            document.getElementById('app_id_android').value = savedParams.app_id_android || '';
+        }
+        updateURLs();
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                updateURLs();
+                saveParamsToLocalStorage(); // Save to local storage upon input
+            });
+        });
+    });
+
+    function updateURLs() {
+        let utm_source = document.getElementById('utm_source').value.trim();
+        let utm_medium = document.getElementById('utm_medium').value.trim();
+        let utm_term = document.getElementById('utm_term').value.trim();
+        let utm_campaign = document.getElementById('utm_campaign').value.trim();
+        let app_id_ios = document.getElementById('app_id_ios').value.trim();
+        let app_id_android = document.getElementById('app_id_android').value.trim();
+
+        let ios_base_url = `https://apps.apple.com/us/app/id${app_id_ios}?referrer=`;
+        let android_base_url = `https://play.google.com/store/apps/details?id=${app_id_android}&referrer=`;
+
+        let utm_params = [];
+        if (utm_source) utm_params.push(`utm_source=${encodeURIComponent(utm_source)}`);
+        if (utm_medium) utm_params.push(`utm_medium=${encodeURIComponent(utm_medium)}`);
+        if (utm_term) utm_params.push(`utm_term=${encodeURIComponent(utm_term)}`);
+        if (utm_campaign) utm_params.push(`utm_campaign=${encodeURIComponent(utm_campaign)}`);
+
+        document.getElementById('ios_url').href = ios_base_url + utm_params.join('&');
+        document.getElementById('ios_url').innerText = ios_base_url + utm_params.join('&');
+
+        document.getElementById('android_url').href = android_base_url + utm_params.join('&');
+        document.getElementById('android_url').innerText = android_base_url + utm_params.join('&');
+    }
+
+    function saveParamsToLocalStorage() {
+        let params = {
+            utm_source: document.getElementById('utm_source').value,
+            utm_medium: document.getElementById('utm_medium').value,
+            utm_term: document.getElementById('utm_term').value,
+            utm_campaign: document.getElementById('utm_campaign').value,
+            app_id_ios: document.getElementById('app_id_ios').value,
+            app_id_android: document.getElementById('app_id_android').value,
+        };
+        localStorage.setItem('utmParams', JSON.stringify(params));
+    }
+
+    function copyToClipboard(elementId) {
+        let copyText = document.getElementById(elementId).href;
+        let textarea = document.createElement("textarea");
+        document.body.appendChild(textarea);
+        textarea.value = copyText;
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("URL copied to clipboard!");
+    }
+</script>
+
+</body>
+</html>
