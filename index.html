@@ -33,6 +33,22 @@
             background-color: #0056b3;
         }
 
+        /* Style for the copy button on hover */
+        button.copy-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for links to be always blue */
+        a {
+            color: #007bff; /* Blue color for links */
+            text-decoration: none; /* Remove underlines from links */
+        }
+
+        /* Style for links on hover */
+        a:hover {
+            text-decoration: underline; /* Add underline on hover */
+        }
+
     </style>
 </head>
 <body>
@@ -53,6 +69,7 @@
 <p>iOS: <a href="#" target="_blank" id="ios_url"></a> <button onclick="copyToClipboard('ios_url')">Copy 💙</button></p>
 <p>Android: <a href="#" target="_blank" id="android_url"></a> <button onclick="copyToClipboard('android_url')">Copy 💙</button></p>
 
+<p>Author: <a href="https://t.me/t_korchagin" target="_blank">t.me/@t_korchagin</a></p>
 <script>
     // Load saved params from local storage
     window.onload = function() {
